@@ -37,7 +37,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def update(self, player, enemies, screen):
         keys = pygame.key.get_pressed()
-        if self.rect.colliderect(player.rect):
+        if self.rect.colliderect(player.sprite.rect):
             self.draw_popup(screen)
             
             self.clean(screen)
