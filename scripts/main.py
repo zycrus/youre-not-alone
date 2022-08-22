@@ -1,4 +1,6 @@
+from distutils.spawn import spawn
 import pygame, sys
+from random import randrange
 
 pygame.init()
 
@@ -11,7 +13,7 @@ clock = pygame.time.Clock()
 
 
 #Player and movement
-class Player:
+class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         self.x = int(x)
         self.y = int(y)
@@ -48,8 +50,37 @@ class Player:
 #Player Initialization
 player = Player(screen_width/2, screen_height/2)
 
+#Enemy
+enemies = pygame.sprite.Group()
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        super().__init__()
+        self.x = x
+        self.y = y
+        self.image = pygame.Surface((32, 32))
+        self.rect = self.image.get_rect(topleft = (x, y))
+        self.image.fill('red')
+        self.color = 'red'
 
-        
+    def update(self):
+        if self.rect.colliderect(player.rect):
+            enemies.remove(self)
+
+#Spawn Enemy
+spawn_timer = 200
+def SpawnEnemy():
+    x = randrange(10, screen_width - 42)
+    y = randrange(10, screen_height - 42)
+
+    enemy = Enemy(x, y)
+    enemies.add(enemy)
+#Timer for spawning enemies
+def DrawTimer():
+    font = pygame.font.SysFont('arial', 32)
+    timer_text = font.render(str(spawn_timer // 60), False, 'white', None)
+    text_rect = timer_text.get_rect()
+    text_rect.center = (screen_width // 2, screen_height // 2)
+    screen.blit(timer_text, text_rect)
 
 #Game Loop
 while True:
@@ -58,28 +89,36 @@ while True:
             pygame.quit()
             sys.exit()
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
+            if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 player.left_pressed = True
-            if event.key == pygame.K_RIGHT:
+            if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                 player.right_pressed = True
-            if event.key == pygame.K_UP:
+            if event.key == pygame.K_UP or event.key == pygame.K_w:
                 player.up_pressed = True
-            if event.key == pygame.K_DOWN:
+            if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 player.down_pressed = True
         if event.type == pygame.KEYUP:
-            if event.key == pygame.K_LEFT:
+            if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 player.left_pressed = False
-            if event.key == pygame.K_RIGHT:
+            if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                 player.right_pressed = False
-            if event.key == pygame.K_UP:
+            if event.key == pygame.K_UP or event.key == pygame.K_w:
                 player.up_pressed = False
-            if event.key == pygame.K_DOWN:
+            if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 player.down_pressed = False
         
     #Character sample
-    screen.fill(((0,0,0)))  
+    screen.fill(((0,0,0)))
+    enemies.update()
+    enemies.draw(screen)
     player.draw(screen)
     player.update()
+    if spawn_timer > 0:
+        spawn_timer -= 1
+    else:
+        SpawnEnemy()
+        spawn_timer = randrange(120, 600)
+    DrawTimer() 
     pygame.display.flip()
 
     pygame.display.update()
