@@ -51,8 +51,8 @@ while True:
 
     enemies.update(player, enemies, screen)
     enemies.draw(screen)
-    player_sprite.update()
-    player_sprite.draw(screen)
+    player.update()
+    player.draw(screen)
 
     if spawn_timer > 0:
         spawn_timer -= 1

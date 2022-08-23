@@ -6,8 +6,8 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
         self.import_character_assets()
-        self.x = int(x)
-        self.y = int(y)
+        self.x = x
+        self.y = y
         self.color = (192,192,192)
         self.velX = 0
         self.velY = 0
@@ -23,6 +23,7 @@ class Player(pygame.sprite.Sprite):
         self.frame = 0
         self.anim_speed = 0.15
         self.image = self.animations[self.status][self.frame]
+        self.rect = self.image.get_rect(topleft = (x, y))
 
     def import_character_assets(self):
         character_path = 'sprites/horror_player/'
@@ -52,9 +53,6 @@ class Player(pygame.sprite.Sprite):
             self.image = image
 
         self.rect = self.image.get_rect(center = self.rect.center)
-    
-    def draw(self, screen):
-        pygame.draw.circle(screen, 'white', (self.x, self.y), 16)
     
     def update(self):
         #Horizontal
@@ -86,5 +84,5 @@ class Player(pygame.sprite.Sprite):
             self.move_frame()
 
         self.animate()
-        self.x += self.velX
-        self.y += self.velY
+        self.rect.x += self.velX
+        self.rect.y += self.velY
