@@ -1,5 +1,5 @@
 import pygame, sys
-from random import randrange
+import random
 from settings import *
 from key_handler import key_handle
 from enemy import Enemy
@@ -26,11 +26,18 @@ enemies = pygame.sprite.Group()
 #Objects
 objects = pygame.sprite.Group()
 bed = Object((350, 200), 'bed')
-cabinet = Object((300, 50), 'cabinet')
-cabinet2 = Object((165, 100), 'cabinet')
+cabinet = Object((350, 30), 'cabinet')
+cabinet2 = Object((285, 30), 'cabinet')
 objects.add(bed)
 objects.add(cabinet)
 objects.add(cabinet2)
+
+corrupt_timer = 60
+def random_corrupt():
+    sprite = random.choice(objects.sprites())
+
+    if sprite.status == 'normal':
+        sprite.status = 'corrupted'
 
 
 #Spawn Enemy
@@ -38,15 +45,15 @@ spawn_timer = 120
 death_timer = 0
 death_timer_max = 300
 def SpawnEnemy():
-    x = randrange(10, screen_width - 42)
-    y = randrange(10, screen_height - 42)
+    x = random.randrange(10, screen_width - 42)
+    y = random.randrange(10, screen_height - 42)
 
     enemy = Enemy(x, y)
     enemies.add(enemy)
 #Timer for spawning enemies
 def DrawText():
     font = pygame.font.SysFont('arial', 16)
-    timer_text = font.render(str(round(spawn_timer / 60)), False, 'white', None)
+    timer_text = font.render(str(round(corrupt_timer / 60)), False, 'white', None)
     text_rect = timer_text.get_rect()
     text_rect.topleft = (20, 20)
     screen.blit(timer_text, text_rect)
@@ -62,18 +69,26 @@ while True:
     #Character sample
     screen.blit(bg, (0, 0))
 
-    objects.update(screen)
+    objects.update(screen, player)
     objects.draw(screen)
+
     enemies.update(player, enemies, screen)
     enemies.draw(screen)
-    player.update()
+
+    player.update(screen)
     player.draw(screen)
 
     if spawn_timer > 0:
         spawn_timer -= 1
     else:
         #SpawnEnemy()
-        spawn_timer = randrange(120, 600)
+        spawn_timer = random.randrange(120, 600)
+
+    if corrupt_timer > 0:
+        corrupt_timer -= 1
+    else:
+        random_corrupt()
+        corrupt_timer = random.randrange(120, 600)
 
     DrawText() 
 

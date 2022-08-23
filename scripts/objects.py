@@ -10,6 +10,7 @@ class Object(pygame.sprite.Sprite):
 
         self.shake_speed = 0
         self.timer = 60
+        self.fix_timer = 60
 
         self.status = 'normal'
         self.frame = 0
@@ -38,18 +39,24 @@ class Object(pygame.sprite.Sprite):
                 self.shake_speed = 0
             self.rect.x = self.origin_pos.x + shake
 
-    def DrawText(self, screen):
+    def draw_text(self, screen):
         font = pygame.font.SysFont('arial', 16)
         timer_text = font.render(str(self.timer / 60), False, 'white', None)
         text_rect = timer_text.get_rect()
         text_rect.topright = (480, 20)
         screen.blit(timer_text, text_rect)
 
-    def update(self, screen):
+    def update(self, screen, player):
         self.vibrate()
-        self.DrawText(screen)
+        self.draw_text(screen)
+        keys = pygame.key.get_pressed()
 
-        if self.timer > 0:
-            self.timer -= 1
-        else:
-            self.status = 'corrupted'
+        if self.rect.colliderect(player.sprite.collider.rect) and self.status == 'corrupted':
+            pygame.draw.rect(screen, 'purple', (self.rect.x - 3, self.rect.y - 3, self.rect.width + 6, self.rect.height + 6))
+
+            if keys[ord('e')]:
+                if self.fix_timer > 0:
+                    self.fix_timer -= 1
+                else:
+                    self.status = 'normal'
+                    self.fix_timer = 60

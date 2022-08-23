@@ -27,6 +27,12 @@ class Player(pygame.sprite.Sprite):
         self.image = self.animations[self.status][self.frame]
         self.rect = self.image.get_rect(topleft = (x, y))
 
+        self.collider = PlayerCollider()
+        self.collider_width = 15
+        self.collider_height = 50
+        self.collider_x = self.rect.x + self.rect.width/2 - self.collider_width/2
+        self.collider_y = self.rect.y + self.rect.height/2 - self.collider_height
+
     def import_character_assets(self):
         character_path = 'sprites/horror_player/'
         self.animations = {'up' : [],
@@ -77,7 +83,7 @@ class Player(pygame.sprite.Sprite):
         else:
             self.direction.y = 0
     
-    def update(self):
+    def update(self, screen):
         self.get_input()
 
         #Move player
@@ -91,3 +97,38 @@ class Player(pygame.sprite.Sprite):
         self.animate()
         self.rect.x += self.velX
         self.rect.y += self.velY
+        self.setup_collider(screen)
+
+        
+    def setup_collider(self, screen):
+        if self.status == 'up':
+            self.collider_width = 15
+            self.collider_height = 50
+            self.collider_x = self.rect.x + self.rect.width/2 - self.collider_width/2
+            self.collider_y = self.rect.y + self.rect.height/2 - self.collider_height
+        elif self.status == 'down':
+            self.collider_width = 15
+            self.collider_height = 50
+            self.collider_x = self.rect.x + self.rect.width/2 - self.collider_width/2
+            self.collider_y = self.rect.y + self.rect.height/2
+        elif self.status == 'side':
+            self.collider_width = 50
+            self.collider_height = 15
+            if self.velX < 0:
+                self.collider_x = self.rect.x + self.rect.width/2 - self.collider_width
+                self.collider_y = self.rect.y + self.rect.height/2 - self.collider_height/2
+            elif self.velX > 0:
+                self.collider_x = self.rect.x + self.rect.width/2
+                self.collider_y = self.rect.y + self.rect.height/2 - self.collider_height/2
+            
+        self.collider.update(screen, self.collider_x, self.collider_y, self.collider_width, self.collider_height)
+
+class PlayerCollider(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.length = 40
+        self.width = 15
+        self.rect = (0, 0, 0, 0)
+
+    def update(self, screen, x, y, width, height):
+        self.rect = (x, y, width, height)
