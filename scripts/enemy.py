@@ -1,3 +1,4 @@
+from math import sqrt
 import pygame
 from settings import *
 from support import import_folder
@@ -38,10 +39,15 @@ class Enemy(pygame.sprite.Sprite):
     def update(self, player, enemies, screen):
         keys = pygame.key.get_pressed()
         if self.rect.colliderect(player.sprite.rect):
+        # for p in player:
+        #     self.player_distance = sqrt((self.x - p.rect.x) ** 2 + (self.y - p.rect.y) ** 2)
+        #     print (self.player_distance)
+        # if self.player_distance <= 50:
             self.draw_popup(screen)
             
             self.clean(screen)
-            if keys[ord('e')]:
+            if keys[ord('e')] and not player.is_busy:
+                player.is_busy = True
                 self.frame = 1
                 if self.timer > 0:
                     self.timer -= 1
@@ -56,3 +62,4 @@ class Enemy(pygame.sprite.Sprite):
                     elif self.frame == 1:
                         self.frame = 0
                     self.popup_anim_speed = 60
+                player.is_busy = False

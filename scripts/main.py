@@ -4,12 +4,15 @@ from settings import *
 from key_handler import key_handle
 from enemy import Enemy
 from player import Player
+from objects import Object
 
 pygame.init()
 
 # Setup pygame
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("You're not alone")
+bg = pygame.image.load('sprites/floor.png')
+
 clock = pygame.time.Clock()
 
 #Player Initialization
@@ -20,8 +23,14 @@ player.add(player_sprite)
 #Enemy
 enemies = pygame.sprite.Group()
 
+#Objects
+objects = pygame.sprite.Group()
+bed = Object((350, 200), 'bed')
+objects.add(bed)
+
+
 #Spawn Enemy
-spawn_timer = 200
+spawn_timer = 120
 death_timer = 0
 death_timer_max = 300
 def SpawnEnemy():
@@ -33,7 +42,7 @@ def SpawnEnemy():
 #Timer for spawning enemies
 def DrawText():
     font = pygame.font.SysFont('arial', 16)
-    timer_text = font.render(str(spawn_timer // 60), False, 'white', None)
+    timer_text = font.render(str(round(spawn_timer / 60)), False, 'white', None)
     text_rect = timer_text.get_rect()
     text_rect.topleft = (20, 20)
     screen.blit(timer_text, text_rect)
@@ -47,8 +56,10 @@ while True:
         key_handle(event, player_sprite)
         
     #Character sample
-    screen.fill(((0,0,0)))
+    screen.blit(bg, (0, 0))
 
+    objects.update(screen)
+    objects.draw(screen)
     enemies.update(player, enemies, screen)
     enemies.draw(screen)
     player.update()
@@ -57,7 +68,7 @@ while True:
     if spawn_timer > 0:
         spawn_timer -= 1
     else:
-        SpawnEnemy()
+        #SpawnEnemy()
         spawn_timer = randrange(120, 600)
 
     DrawText() 

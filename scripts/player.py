@@ -19,6 +19,8 @@ class Player(pygame.sprite.Sprite):
         self.up_pressed = False
         self.down_pressed = False
 
+        self.is_busy = False
+
         self.status = 'down'
         self.frame = 0
         self.anim_speed = 0.15
@@ -53,8 +55,8 @@ class Player(pygame.sprite.Sprite):
             self.image = image
 
         self.rect = self.image.get_rect(center = self.rect.center)
-    
-    def update(self):
+
+    def get_input(self):
         #Horizontal
         if self.left_pressed and not self.right_pressed:
             self.direction.x = -1
@@ -74,6 +76,9 @@ class Player(pygame.sprite.Sprite):
             self.status = 'down'
         else:
             self.direction.y = 0
+    
+    def update(self):
+        self.get_input()
 
         #Move player
         self.velX = self.speed * self.direction.x
