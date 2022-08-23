@@ -26,7 +26,11 @@ enemies = pygame.sprite.Group()
 #Objects
 objects = pygame.sprite.Group()
 bed = Object((350, 200), 'bed')
+cabinet = Object((300, 50), 'cabinet')
+cabinet2 = Object((165, 100), 'cabinet')
 objects.add(bed)
+objects.add(cabinet)
+objects.add(cabinet2)
 
 
 #Spawn Enemy
