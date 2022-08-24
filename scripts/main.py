@@ -11,6 +11,8 @@ pygame.init()
 # Setup pygame
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("You're not alone")
+icon = pygame.image.load('sprites/ghost_player/idle/down/sprite_0.png')
+pygame.display.set_icon(icon) 
 bg = pygame.image.load('sprites/floor.png')
 
 clock = pygame.time.Clock()
