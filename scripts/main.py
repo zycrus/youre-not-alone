@@ -53,7 +53,7 @@ def SpawnEnemy():
 #Timer for spawning enemies
 def DrawText():
     font = pygame.font.SysFont('arial', 16)
-    timer_text = font.render(str(round(corrupt_timer / 60)), False, 'white', None)
+    timer_text = font.render('Press E to Light up', False, 'white', None)
     text_rect = timer_text.get_rect()
     text_rect.topleft = (20, 20)
     screen.blit(timer_text, text_rect)

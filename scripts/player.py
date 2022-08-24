@@ -61,7 +61,6 @@ class Player(pygame.sprite.Sprite):
             self.frame = 0
 
     def animate(self):
-
         image = self.anim[int(self.frame)]
         if self.status == 'side':
             if self.direction.x > 0:
@@ -75,6 +74,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center = self.rect.center)
 
     def get_input(self):
+        keys = pygame.key.get_pressed()
         #Horizontal
         if self.left_pressed and not self.right_pressed:
             self.direction.x = -1
@@ -103,6 +103,10 @@ class Player(pygame.sprite.Sprite):
             self.action = 'idle'
             self.direction.y = 0
 
+        if keys[ord('e')]:
+            self.is_busy = True
+        else:
+            self.is_busy = False
     
     def update(self, screen):
         self.get_input()
@@ -127,22 +131,36 @@ class Player(pygame.sprite.Sprite):
             self.collider_height = 50
             self.collider_x = self.rect.x + self.rect.width/2 - self.collider_width/2
             self.collider_y = self.rect.y + self.rect.height/2 - self.collider_height
+
+            self.collider.pos = (self.rect.x, self.rect.y - self.rect.height/2)
+            self.collider.image = self.collider.image_up
         elif self.status == 'down':
             self.collider_width = 15
             self.collider_height = 50
             self.collider_x = self.rect.x + self.rect.width/2 - self.collider_width/2
             self.collider_y = self.rect.y + self.rect.height/2
+
+            self.collider.pos = (self.rect.x, self.rect.y)
+            self.collider.image = self.collider.image_down
         elif self.status == 'side':
             self.collider_width = 50
             self.collider_height = 15
             if self.velX < 0:
                 self.collider_x = self.rect.x + self.rect.width/2 - self.collider_width
                 self.collider_y = self.rect.y + self.rect.height/2 - self.collider_height/2
+
+                self.collider.pos = (self.rect.x - self.rect.width/2, self.rect.y)
+                self.collider.image = self.collider.image_left
             elif self.velX > 0:
                 self.collider_x = self.rect.x + self.rect.width/2
                 self.collider_y = self.rect.y + self.rect.height/2 - self.collider_height/2
+
+                self.collider.pos = (self.rect.x, self.rect.y)
+                self.collider.image = self.collider.image_right
             
         self.collider.update(screen, self.collider_x, self.collider_y, self.collider_width, self.collider_height)
+        if self.is_busy:
+            screen.blit(self.collider.image, self.collider.pos)
 
 class PlayerCollider(pygame.sprite.Sprite):
     def __init__(self):
@@ -150,6 +168,12 @@ class PlayerCollider(pygame.sprite.Sprite):
         self.length = 40
         self.width = 15
         self.rect = (0, 0, 0, 0)
+        self.pos = (0, 0)
+        self.image_right = pygame.image.load('sprites/ghost_player/light/light-right.png')
+        self.image_left = pygame.image.load('sprites/ghost_player/light/light-left.png')
+        
+        self.image_up = pygame.image.load('sprites/ghost_player/light/light-up.png')
+        self.image_down = pygame.image.load('sprites/ghost_player/light/light-down.png')
 
     def update(self, screen, x, y, width, height):
         self.rect = (x, y, width, height)
