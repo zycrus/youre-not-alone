@@ -21,10 +21,11 @@ class Player(pygame.sprite.Sprite):
 
         self.is_busy = False
 
+        self.action = 'idle'
         self.status = 'down'
         self.frame = 0
-        self.anim_speed = 0.15
-        self.image = self.animations[self.status][self.frame]
+        self.anim_speed = 0.1
+        self.image = self.animations[self.action][self.status][self.frame]
         self.rect = self.image.get_rect(topleft = (x, y))
 
         self.collider = PlayerCollider()
@@ -34,21 +35,32 @@ class Player(pygame.sprite.Sprite):
         self.collider_y = self.rect.y + self.rect.height/2 - self.collider_height
 
     def import_character_assets(self):
-        character_path = 'sprites/horror_player/'
-        self.animations = {'up' : [],
-                            'down' : [],
-                            'side' : []}
-        for animation in self.animations.keys():
-            full_path = character_path + animation
-            self.animations[animation] = import_folder(full_path)
+        character_path = 'sprites/ghost_player/'
+        self.animations = {'idle': {'up' : [],
+                                    'down' : [],
+                                    'side' : []},
+                            'moving': {'up' : [],
+                                    'down' : [],
+                                    'side' : []}}
+
+        for action in self.animations.keys():
+            for anim in self.animations[action].keys():
+                full_path = character_path + action + '/' + anim
+                self.animations[action][anim] = import_folder(full_path)
+
+        print(self.animations)
+        
+        # for animation in self.animations.keys():
+        #     full_path = character_path + action + '/' + anim
+        #     self.animations[animation] = import_folder(full_path)
             
     def move_frame(self):
+        self.anim = self.animations[self.action][self.status]
         self.frame += self.anim_speed
         if self.frame >= len(self.anim):
             self.frame = 0
 
     def animate(self):
-        self.anim = self.animations[self.status]
 
         image = self.anim[int(self.frame)]
         if self.status == 'side':
@@ -66,11 +78,16 @@ class Player(pygame.sprite.Sprite):
         #Horizontal
         if self.left_pressed and not self.right_pressed:
             self.direction.x = -1
+            
+            self.action = 'moving'
             self.status = 'side'
         elif self.right_pressed and not self.left_pressed:
             self.direction.x = 1
+            
+            self.action = 'moving'
             self.status = 'side'
         else:
+            self.action = 'idle'
             self.direction.x = 0
 
         #Vertical
@@ -79,9 +96,13 @@ class Player(pygame.sprite.Sprite):
             self.status = 'up'
         elif self.down_pressed and not self.up_pressed:
             self.direction.y = 1
+            
+            self.action = 'moving'
             self.status = 'down'
         else:
+            self.action = 'idle'
             self.direction.y = 0
+
     
     def update(self, screen):
         self.get_input()
@@ -91,8 +112,8 @@ class Player(pygame.sprite.Sprite):
         self.velY = self.speed * self.direction.y
         
         #Animate frames
-        if self.direction != (0, 0):
-            self.move_frame()
+        # if self.direction != (0, 0):
+        self.move_frame()
 
         self.animate()
         self.rect.x += self.velX
