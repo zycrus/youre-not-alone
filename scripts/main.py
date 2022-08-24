@@ -5,6 +5,7 @@ from key_handler import key_handle
 from enemy import Enemy
 from player import Player
 from objects import Object
+from clock import WallClock
 
 pygame.init()
 
@@ -30,9 +31,11 @@ objects = pygame.sprite.Group()
 bed = Object((350, 200), 'bed')
 cabinet = Object((350, 30), 'cabinet')
 cabinet2 = Object((285, 30), 'cabinet')
+wallclock = WallClock((100, 100), screen)
 objects.add(bed)
 objects.add(cabinet)
 objects.add(cabinet2)
+objects.add(wallclock)
 
 corrupt_timer = 60
 def random_corrupt():
