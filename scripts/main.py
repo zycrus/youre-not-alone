@@ -18,6 +18,11 @@ bg = pygame.image.load('sprites/floor.png')
 
 clock = pygame.time.Clock()
 
+event_states = ['menu', 'tutorial', 'main-game']
+current_state = event_states[2]
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 #Player Initialization
 player = pygame.sprite.GroupSingle()
 player_sprite = Player(screen_width/2 - 16, screen_height/2 - 16)
@@ -26,37 +31,44 @@ player.add(player_sprite)
 #Enemy
 enemies = pygame.sprite.Group()
 
-#Objects
+# Room objects
 objects = pygame.sprite.Group()
-bed = Object((350, 200), 'bed')
-cabinet = Object((350, 30), 'cabinet')
-cabinet2 = Object((285, 30), 'cabinet')
-wallclock = WallClock((100, 100), screen)
-objects.add(bed)
-objects.add(cabinet)
-objects.add(cabinet2)
-objects.add(wallclock)
 
-corrupt_timer = 60
+room_layout = [
+    Object((370, 100), 'bed'),
+    Object((300, 150), 'carpet-side'),
+    Object((30, 30), 'cabinet'),
+    Object((100, 30), 'cabinet'),
+    Object((50, 320), 'carpet'),
+    Object((50, 400), 'table'),
+    WallClock((200, 35), screen)
+    ]
+
+for o in room_layout:
+    objects.add(o)
+# - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+corrupt_timer = 300
 def random_corrupt():
     sprite = random.choice(objects.sprites())
 
     if sprite.status == 'normal':
         sprite.status = 'corrupted'
 
-
 #Spawn Enemy
 spawn_timer = 120
 death_timer = 0
 death_timer_max = 300
-def SpawnEnemy():
+def spawn_enemy():
     x = random.randrange(10, screen_width - 42)
     y = random.randrange(10, screen_height - 42)
 
     enemy = Enemy(x, y)
     enemies.add(enemy)
+
+
 #Timer for spawning enemies
-def DrawText():
+def draw_text():
     font = pygame.font.SysFont('arial', 16)
     timer_text = font.render('Press E to Light up', False, 'white', None)
     text_rect = timer_text.get_rect()
@@ -71,15 +83,14 @@ while True:
             sys.exit()
         key_handle(event, player_sprite)
         
-    #Character sample
+    
     screen.blit(bg, (0, 0))
 
+    # Objects
     objects.update(screen, player)
     objects.draw(screen)
 
-    enemies.update(player, enemies, screen)
-    enemies.draw(screen)
-
+    # Character
     player.update(screen)
     player.draw(screen)
 
@@ -95,7 +106,7 @@ while True:
         random_corrupt()
         corrupt_timer = random.randrange(120, 600)
 
-    DrawText() 
+    draw_text() 
 
     pygame.display.flip()
     pygame.display.update()

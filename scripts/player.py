@@ -128,7 +128,7 @@ class Player(pygame.sprite.Sprite):
     def setup_collider(self, screen):
         if self.status == 'up':
             self.collider_width = 15
-            self.collider_height = 50
+            self.collider_height = 55
             self.collider_x = self.rect.x + self.rect.width/2 - self.collider_width/2
             self.collider_y = self.rect.y + self.rect.height/2 - self.collider_height
 
@@ -136,14 +136,14 @@ class Player(pygame.sprite.Sprite):
             self.collider.image = self.collider.image_up
         elif self.status == 'down':
             self.collider_width = 15
-            self.collider_height = 50
+            self.collider_height = 55
             self.collider_x = self.rect.x + self.rect.width/2 - self.collider_width/2
             self.collider_y = self.rect.y + self.rect.height/2
 
             self.collider.pos = (self.rect.x, self.rect.y)
             self.collider.image = self.collider.image_down
         elif self.status == 'side':
-            self.collider_width = 50
+            self.collider_width = 55
             self.collider_height = 15
             if self.velX < 0:
                 self.collider_x = self.rect.x + self.rect.width/2 - self.collider_width
