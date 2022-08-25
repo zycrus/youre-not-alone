@@ -15,6 +15,9 @@ class WallClock(pygame.sprite.Sprite):
         self.glow_alpha = 100
 
         self.fix_timer = 60
+        
+        self.is_lose = False
+        self.is_win = False
 
         self.status = 'normal'
         self.frame = 0 
@@ -34,13 +37,14 @@ class WallClock(pygame.sprite.Sprite):
             self.time_hour += self.time_speed
         else:
             self.draw_text('you win')
+            self.is_win = True
         if self.status == 'corrupted':
             self.frame = int(self.corrupt_time)
             if self.corrupt_time < len(self.animations['corrupted']) - 1:
                 self.corrupt_time += 0.00625
                 # (len(self.animations['corrupted']) - 1) / (secs * 60)
             else:
-                self.draw_text('u ded')
+                self.is_lose = True
                 
         elif self.status == 'normal':
             self.frame = int(self.time_hour)

@@ -14,6 +14,7 @@ class Object(pygame.sprite.Sprite):
         self.timer = 0
         self.fix_timer = 60
         self.glow_alpha = 100
+        self.is_lose = False
 
         self.status = 'normal'
         self.frame = 0
@@ -37,13 +38,18 @@ class Object(pygame.sprite.Sprite):
 
     def animate(self):
         anim_speed = (len(self.animations[self.status]) - 1) / (self.secs * 60)
-        if self.frame < len(self.animations[self.status]) - 1:
-            self.frame += anim_speed
-            print(self.type, self.frame, anim_speed, (len(self.animations[self.status]) - 1), self.secs * 60)
+        if self.status == 'corrupted':
+            if self.frame < len(self.animations[self.status]) - 1:
+                self.frame += anim_speed
+                # print(self.type, self.frame, anim_speed, (len(self.animations[self.status]) - 1), self.secs * 60)
+        elif self.status == 'corrupted':
+             self.timer = 0
         if self.timer < self.timer_max and self.status == 'corrupted':
             self.timer += 1
             if self.timer > self.timer_max / 2:
                 self.vibrate()
+            elif self.timer == self.timer_max:
+                self.is_lose = True
         
         self.image = self.animations[self.status][int(self.frame)]
 

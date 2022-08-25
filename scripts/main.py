@@ -15,10 +15,14 @@ pygame.display.set_caption("You're not alone")
 icon = pygame.image.load('sprites/ghost_player/idle/down/sprite_0.png')
 pygame.display.set_icon(icon) 
 bg = pygame.image.load('sprites/floor2.png')
+title_screen = pygame.image.load('sprites/title_screen.png')
+tutorial_screen = pygame.image.load('sprites/tutorial_screen.png')
+lose_screen = pygame.image.load('sprites/lose_screen.png')
+win_screen = pygame.image.load('sprites/win_screen.png')
 
 clock = pygame.time.Clock()
 
-event_states = ['menu', 'tutorial', 'main-game', 'win']
+event_states = ['menu', 'tutorial', 'main-game', 'lose', 'win']
 current_state = event_states[0]
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -34,6 +38,7 @@ enemies = pygame.sprite.Group()
 # Room objects
 objects = pygame.sprite.Group()
 
+wall_clock = WallClock((200, 15), screen)
 room_layout = [
     Object((370, 100), 'bed'),
     Object((300, 150), 'carpet-side'),
@@ -41,7 +46,7 @@ room_layout = [
     Object((100, 30), 'cabinet'),
     Object((50, 320), 'carpet'),
     Object((50, 400), 'table'),
-    WallClock((200, 15), screen)
+    wall_clock
     ]
 
 for o in room_layout:
@@ -99,11 +104,9 @@ while True:
         continue
 
     if current_state == event_states[0]:
-        draw_text('Press SPACE to Play', 35, (250, 250))
+        screen.blit(title_screen, (0, 0))
     elif current_state == event_states[1]:
-        screen.fill('black')
-        draw_text('You are not alone!', 20, (250, 250))
-        draw_text('kwan', 20, (250, 300))
+        screen.blit(tutorial_screen, (0, 0))
     elif current_state == event_states[2]:
         screen.blit(bg, (0, 0))
 
@@ -127,7 +130,18 @@ while True:
             random_corrupt()
             corrupt_timer = random.randrange(120, 600)
 
+        for sprite in objects.sprites():
+            if sprite.is_lose == True:
+                current_state = event_states[3]
+        if wall_clock.is_win == True:
+            current_state = event_states[4]
+            
+
         draw_text("Press E to Light Up", 16, (90, 15)) 
+    elif current_state == event_states[3]:
+        screen.blit(lose_screen, (0, 0))
+    elif current_state == event_states[4]:
+        screen.blit(win_screen, (0, 0))
 
     pygame.display.flip()
     pygame.display.update()
