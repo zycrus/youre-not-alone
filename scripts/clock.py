@@ -44,7 +44,7 @@ class WallClock(pygame.sprite.Sprite):
                 
         elif self.status == 'normal':
             self.frame = int(self.time_hour)
-        self.image = self.animations[self.status][self.frame]
+        self.image = self.animations[self.status][int(self.frame)]
 
     def draw_text(self, message):
         font = pygame.font.SysFont('arial', 16)

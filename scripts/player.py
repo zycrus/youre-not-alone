@@ -35,7 +35,7 @@ class Player(pygame.sprite.Sprite):
         self.collider_y = self.rect.y + self.rect.height/2 - self.collider_height
 
     def import_character_assets(self):
-        character_path = 'sprites/ghost_player/'
+        character_path = './sprites/ghost_player/'
         self.animations = {'idle': {'up' : [],
                                     'down' : [],
                                     'side' : []},

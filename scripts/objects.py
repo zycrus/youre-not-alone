@@ -36,14 +36,16 @@ class Object(pygame.sprite.Sprite):
         screen.blit(timer_text, text_rect)
 
     def animate(self):
-        anim_speed = (len(self.animations[self.status]) - 1) / self.secs * 60
+        anim_speed = (len(self.animations[self.status]) - 1) / (self.secs * 60)
         if self.frame < len(self.animations[self.status]) - 1:
             self.frame += anim_speed
+            print(self.type, self.frame, anim_speed, (len(self.animations[self.status]) - 1), self.secs * 60)
         if self.timer < self.timer_max and self.status == 'corrupted':
             self.timer += 1
             if self.timer > self.timer_max / 2:
                 self.vibrate()
-        self.image = self.animations[self.status][self.frame]
+        
+        self.image = self.animations[self.status][int(self.frame)]
 
     def vibrate(self):
         if self.shake_speed <= 0:
