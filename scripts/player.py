@@ -47,8 +47,6 @@ class Player(pygame.sprite.Sprite):
             for anim in self.animations[action].keys():
                 full_path = character_path + action + '/' + anim
                 self.animations[action][anim] = import_folder(full_path)
-
-        print(self.animations)
         
         # for animation in self.animations.keys():
         #     full_path = character_path + action + '/' + anim

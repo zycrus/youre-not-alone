@@ -14,12 +14,12 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("You're not alone")
 icon = pygame.image.load('sprites/ghost_player/idle/down/sprite_0.png')
 pygame.display.set_icon(icon) 
-bg = pygame.image.load('sprites/floor.png')
+bg = pygame.image.load('sprites/floor2.png')
 
 clock = pygame.time.Clock()
 
-event_states = ['menu', 'tutorial', 'main-game']
-current_state = event_states[2]
+event_states = ['menu', 'tutorial', 'main-game', 'win']
+current_state = event_states[0]
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -41,7 +41,7 @@ room_layout = [
     Object((100, 30), 'cabinet'),
     Object((50, 320), 'carpet'),
     Object((50, 400), 'table'),
-    WallClock((200, 35), screen)
+    WallClock((200, 15), screen)
     ]
 
 for o in room_layout:
@@ -68,45 +68,66 @@ def spawn_enemy():
 
 
 #Timer for spawning enemies
-def draw_text():
-    font = pygame.font.SysFont('arial', 16)
-    timer_text = font.render('Press E to Light up', False, 'white', None)
+def draw_text(text, size, pos):
+    font = pygame.font.SysFont('arial', size)
+    timer_text = font.render(text, False, 'white', None)
     text_rect = timer_text.get_rect()
-    text_rect.topleft = (20, 20)
+    text_rect.center = pos
     screen.blit(timer_text, text_rect)
 
+paused = False
 #Game Loop
 while True:
     for event in pygame.event.get():
+        key_handle(event, player_sprite)
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        key_handle(event, player_sprite)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE and current_state == event_states[2]:
+                draw_text("PAUSED", 50, (250, 250))
+                pygame.display.update()
+                paused = not paused
+            if event.key == pygame.K_SPACE:
+                if current_state == event_states[0]:
+                    current_state = event_states[1]
+                elif current_state == event_states[1]:
+                    current_state = event_states[2]
+                
         
-    
-    screen.blit(bg, (0, 0))
+    if paused:
+        continue
 
-    # Objects
-    objects.update(screen, player)
-    objects.draw(screen)
+    if current_state == event_states[0]:
+        draw_text('Press SPACE to Play', 35, (250, 250))
+    elif current_state == event_states[1]:
+        screen.fill('black')
+        draw_text('You are not alone!', 20, (250, 250))
+        draw_text('kwan', 20, (250, 300))
+    elif current_state == event_states[2]:
+        screen.blit(bg, (0, 0))
 
-    # Character
-    player.update(screen)
-    player.draw(screen)
+        # Objects
+        objects.update(screen, player)
+        objects.draw(screen)
 
-    if spawn_timer > 0:
-        spawn_timer -= 1
-    else:
-        #SpawnEnemy()
-        spawn_timer = random.randrange(120, 600)
+        # Character
+        player.update(screen)
+        player.draw(screen)
 
-    if corrupt_timer > 0:
-        corrupt_timer -= 1
-    else:
-        random_corrupt()
-        corrupt_timer = random.randrange(120, 600)
+        if spawn_timer > 0:
+            spawn_timer -= 1
+        else:
+            #SpawnEnemy()
+            spawn_timer = random.randrange(120, 600)
 
-    draw_text() 
+        if corrupt_timer > 0:
+            corrupt_timer -= 1
+        else:
+            random_corrupt()
+            corrupt_timer = random.randrange(120, 600)
+
+        draw_text("Press E to Light Up", 16, (90, 15)) 
 
     pygame.display.flip()
     pygame.display.update()

@@ -41,7 +41,6 @@ class Object(pygame.sprite.Sprite):
             self.frame += anim_speed
         if self.timer < self.timer_max and self.status == 'corrupted':
             self.timer += 1
-            print(self.timer)
             if self.timer > self.timer_max / 2:
                 self.vibrate()
         self.image = self.animations[self.status][self.frame]

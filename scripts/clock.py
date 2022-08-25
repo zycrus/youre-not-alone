@@ -18,7 +18,6 @@ class WallClock(pygame.sprite.Sprite):
 
         self.status = 'normal'
         self.frame = 0 
-        print(self.animations)
         self.image = self.animations['normal'][self.frame]
         self.rect = self.image.get_rect(topleft = pos)
 
@@ -54,22 +53,25 @@ class WallClock(pygame.sprite.Sprite):
         text_rect.topleft = (20, 50)
         self.screen.blit(timer_text, text_rect)
 
+    def fix_clock(self):
+        keys = pygame.key.get_pressed()
+        if keys[ord('e')]:
+            if self.fix_timer > 0:
+                self.fix_timer -= 1
+                self.glow_alpha += 3
+            else:
+                self.status = 'normal'
+                self.fix_timer = 60
+                self.corrupt_time = 0
+                self.glow_alpha = 100
+                
     def update(self, screen, player):
         self.animate()
-        keys = pygame.key.get_pressed()
 
         if self.rect.colliderect(player.sprite.collider.rect) and self.status == 'corrupted':
             glow = pygame.Surface((self.rect.width + 6, self.rect.height + 6))
             glow.set_alpha(self.glow_alpha)
             glow.fill('purple')
             #screen.blit(glow, (self.rect.x - 3, self.rect.y - 3))        
-
-            if keys[ord('e')]:
-                if self.fix_timer > 0:
-                    self.fix_timer -= 1
-                    self.glow_alpha += 3
-                else:
-                    self.status = 'normal'
-                    self.fix_timer = 60
-                    self.corrupt_time = 0
-                    self.glow_alpha = 100
+        self.fix_clock()
+            
