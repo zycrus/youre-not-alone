@@ -112,6 +112,15 @@ class Player(pygame.sprite.Sprite):
         #Move player
         self.velX = self.speed * self.direction.x
         self.velY = self.speed * self.direction.y
+
+        if self.rect.left < 12:
+            self.rect.left = 12
+        elif self.rect.right > 488:
+            self.rect.right = 488
+        if self.rect.top < 12:
+            self.rect.top = 12
+        elif self.rect.bottom > 488:
+            self.rect.bottom = 488
         
         #Animate frames
         # if self.direction != (0, 0):

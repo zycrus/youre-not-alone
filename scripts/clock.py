@@ -67,6 +67,7 @@ class WallClock(pygame.sprite.Sprite):
                 self.status = 'normal'
                 self.fix_timer = 60
                 self.corrupt_time = 0
+                self.corrupt_time = 0
                 self.glow_alpha = 100
                 
     def update(self, screen, player):
@@ -77,5 +78,5 @@ class WallClock(pygame.sprite.Sprite):
             glow.set_alpha(self.glow_alpha)
             glow.fill('purple')
             #screen.blit(glow, (self.rect.x - 3, self.rect.y - 3))        
-        self.fix_clock()
+            self.fix_clock()
             

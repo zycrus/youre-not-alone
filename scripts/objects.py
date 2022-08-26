@@ -48,8 +48,9 @@ class Object(pygame.sprite.Sprite):
             self.timer += 1
             if self.timer > self.timer_max / 2:
                 self.vibrate()
-            elif self.timer == self.timer_max:
-                self.is_lose = True
+                if self.timer >= self.timer_max:
+                    self.is_lose = True
+                    print('idk')
         
         self.image = self.animations[self.status][int(self.frame)]
 
@@ -78,6 +79,8 @@ class Object(pygame.sprite.Sprite):
                     self.glow_alpha += 3
                 else:
                     self.status = 'normal'
+                    self.frame = 0
+                    self.timer = 0
                     self.fix_timer = 60
                     self.glow_alpha = 100
 

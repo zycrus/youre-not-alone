@@ -15,6 +15,7 @@ pygame.display.set_caption("You're not alone")
 icon = pygame.image.load('sprites/ghost_player/idle/down/sprite_0.png')
 pygame.display.set_icon(icon) 
 bg = pygame.image.load('sprites/floor2.png')
+border = pygame.image.load('sprites/border.png')
 title_screen = pygame.image.load('sprites/title_screen.png')
 tutorial_screen = pygame.image.load('sprites/tutorial_screen.png')
 lose_screen = pygame.image.load('sprites/lose_screen.png')
@@ -39,26 +40,29 @@ enemies = pygame.sprite.Group()
 objects = pygame.sprite.Group()
 
 wall_clock = WallClock((200, 15), screen)
-room_layout = [
-    Object((370, 100), 'bed'),
-    Object((300, 150), 'carpet-side'),
-    Object((30, 30), 'cabinet'),
-    Object((100, 30), 'cabinet'),
-    Object((50, 320), 'carpet'),
-    Object((50, 400), 'table'),
-    wall_clock
-    ]
+def setup_room(wall_clock):
+    wall_clock = WallClock((200, 15), screen)
+    room_layout = [
+        Object((370, 100), 'bed'),
+        Object((300, 150), 'carpet-side'),
+        Object((30, 30), 'cabinet'),
+        Object((100, 30), 'cabinet'),
+        Object((50, 320), 'carpet'),
+        Object((50, 400), 'table'),
+        wall_clock
+        ]
 
-for o in room_layout:
-    objects.add(o)
+    for o in room_layout:
+        objects.add(o)
 # - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+corrupt_timer_max = 600
 corrupt_timer = 300
-def random_corrupt():
+def random_corrupt(timer):
     sprite = random.choice(objects.sprites())
-
     if sprite.status == 'normal':
         sprite.status = 'corrupted'
+    timer -= 10
 
 #Spawn Enemy
 spawn_timer = 120
@@ -98,6 +102,14 @@ while True:
                     current_state = event_states[1]
                 elif current_state == event_states[1]:
                     current_state = event_states[2]
+                    setup_room(wall_clock)
+                elif current_state == event_states[3]:
+                    current_state = event_states[0]
+                    objects.empty()
+                    print(objects.sprites())
+                elif current_state == event_states[4]:
+                    current_state = event_states[0]
+                    objects.empty()
                 
         
     if paused:
@@ -118,17 +130,19 @@ while True:
         player.update(screen)
         player.draw(screen)
 
+        screen.blit(border, (0, 0))
+
         if spawn_timer > 0:
             spawn_timer -= 1
         else:
             #SpawnEnemy()
-            spawn_timer = random.randrange(120, 600)
+            spawn_timer = random.randrange(120, corrupt_timer_max)
 
         if corrupt_timer > 0:
             corrupt_timer -= 1
         else:
-            random_corrupt()
-            corrupt_timer = random.randrange(120, 600)
+            random_corrupt(corrupt_timer_max)
+            corrupt_timer = random.randrange(120, corrupt_timer_max)
 
         for sprite in objects.sprites():
             if sprite.is_lose == True:
