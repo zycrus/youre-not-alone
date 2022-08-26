@@ -1,5 +1,6 @@
 import pygame, sys
 import random
+from pygame import mixer
 from settings import *
 from key_handler import key_handle
 from enemy import Enemy
@@ -27,6 +28,10 @@ event_states = ['menu', 'tutorial', 'main-game', 'lose', 'win']
 current_state = event_states[0]
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - -
+#Background Music
+mixer.music.load('BGM and Sound Effects/bgm.wav')
+mixer.music.play(-1)
+
 
 #Player Initialization
 player = pygame.sprite.GroupSingle()
