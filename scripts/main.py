@@ -98,6 +98,8 @@ while True:
             pygame.quit()
             sys.exit()
         if event.type == pygame.KEYDOWN:
+            player_sprite.play_sound(event)
+            
             
             if event.key == pygame.K_ESCAPE and current_state == event_states[2]:
                 mixer.music.unpause() 

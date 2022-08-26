@@ -5,6 +5,7 @@ from support import import_folder
 #Player and movement
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
+        
         super().__init__()
         self.import_character_assets()
         self.x = x
@@ -34,6 +35,8 @@ class Player(pygame.sprite.Sprite):
         self.collider_height = 50
         self.collider_x = self.rect.x + self.rect.width/2 - self.collider_width/2
         self.collider_y = self.rect.y + self.rect.height/2 - self.collider_height
+
+        self.flash_sound = mixer.Sound('BGM and Sound Effects/flash.wav')
 
     def import_character_assets(self):
         character_path = './sprites/ghost_player/'
@@ -110,7 +113,6 @@ class Player(pygame.sprite.Sprite):
     def play_sound(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
-                self.flash_sound = mixer.Sound('BGM and Sound Effects/flash.mp3')
                 self.flash_sound.play()
     
     def update(self, screen):
