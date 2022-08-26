@@ -21,6 +21,8 @@ title_screen = pygame.image.load('sprites/title_screen.png')
 tutorial_screen = pygame.image.load('sprites/tutorial_screen.png')
 lose_screen = pygame.image.load('sprites/lose_screen.png')
 win_screen = pygame.image.load('sprites/win_screen.png')
+paused_screen = pygame.image.load('sprites/paused_screen.png')
+press_e = pygame.image.load('sprites/press_e.png')
 
 lost_sound = mixer.Sound('BGM and Sound Effects/lost.wav')
 win_sound = mixer.Sound('BGM and Sound Effects/win.mp3')
@@ -106,9 +108,10 @@ while True:
             
             if event.key == pygame.K_ESCAPE and current_state == event_states[2]:
                 mixer.music.unpause() 
-                draw_text("PAUSED", 50, (250, 250))
+                screen.blit(paused_screen, (100, 200))
                 pygame.display.update()
                 paused = not paused
+                pygame.display.update()
             if event.key == pygame.K_SPACE:
                 if current_state == event_states[0]:
                     current_state = event_states[1]
@@ -168,7 +171,9 @@ while True:
             current_state = event_states[4]
             
 
-        draw_text("Press E to Light Up", 16, (90, 15)) 
+        screen.blit(press_e, (140, 10))
+        
+        
     elif current_state == event_states[3]:
         mixer.music.stop()
         lost_sound.play()  
