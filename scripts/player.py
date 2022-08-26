@@ -37,6 +37,7 @@ class Player(pygame.sprite.Sprite):
         self.collider_y = self.rect.y + self.rect.height/2 - self.collider_height
 
         self.flash_sound = mixer.Sound('BGM and Sound Effects/flash.wav')
+        self.flash_sound_play = False
 
     def import_character_assets(self):
         character_path = './sprites/ghost_player/'
@@ -112,8 +113,12 @@ class Player(pygame.sprite.Sprite):
 
     def play_sound(self, event):
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_e:
+            if event.key == pygame.K_e and not self.flash_sound_play:
                 self.flash_sound.play()
+                self.flash_sound_play = True
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_e:
+                self.flash_sound_play = False
     
     def update(self, screen):
         self.get_input()
