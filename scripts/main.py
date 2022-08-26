@@ -22,6 +22,9 @@ tutorial_screen = pygame.image.load('sprites/tutorial_screen.png')
 lose_screen = pygame.image.load('sprites/lose_screen.png')
 win_screen = pygame.image.load('sprites/win_screen.png')
 
+lost_sound = mixer.Sound('BGM and Sound Effects/lost.wav')
+win_sound = mixer.Sound('BGM and Sound Effects/win.mp3')
+
 clock = pygame.time.Clock()
 
 event_states = ['menu', 'tutorial', 'main-game', 'lose', 'win']
@@ -114,10 +117,14 @@ while True:
                     setup_room(wall_clock)
                 elif current_state == event_states[3]:
                     current_state = event_states[0]
+                    lost_sound.stop()
+                    mixer.music.play(-1)
                     objects.empty()
                     print(objects.sprites())
                 elif current_state == event_states[4]:
                     current_state = event_states[0]
+                    win_sound.stop()
+                    mixer.music.play(-1)
                     objects.empty()
                 
         
@@ -155,20 +162,20 @@ while True:
             corrupt_timer = random.randrange(120, corrupt_timer_max)
 
         for sprite in objects.sprites():
-            if sprite.is_lose == True:
-                lost_sound = mixer.Sound('BGM and Sound Effects/lost.wav')
-                lost_sound.play()            
+            if sprite.is_lose == True:         
                 current_state = event_states[3]
         if wall_clock.is_win == True:
-            win_sound = mixer.Sound('BGM and Sound Effects/win.mp3')
-            win_sound.play()
             current_state = event_states[4]
             
 
         draw_text("Press E to Light Up", 16, (90, 15)) 
     elif current_state == event_states[3]:
+        mixer.music.stop()
+        lost_sound.play()  
         screen.blit(lose_screen, (0, 0))
     elif current_state == event_states[4]:
+        mixer.music.stop()
+        win_sound.play()
         screen.blit(win_screen, (0, 0))
 
     pygame.display.flip()

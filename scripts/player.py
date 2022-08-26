@@ -113,12 +113,8 @@ class Player(pygame.sprite.Sprite):
 
     def play_sound(self, event):
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_e and not self.flash_sound_play:
-                self.flash_sound.play()
-                self.flash_sound_play = True
-        elif event.type == pygame.KEYUP:
             if event.key == pygame.K_e:
-                self.flash_sound_play = False
+                self.flash_sound.play()
     
     def update(self, screen):
         self.get_input()
