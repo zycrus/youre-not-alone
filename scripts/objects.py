@@ -1,4 +1,5 @@
 import pygame
+from pygame import mixer
 from support import import_folder
 
 class Object(pygame.sprite.Sprite):
@@ -56,6 +57,8 @@ class Object(pygame.sprite.Sprite):
 
     def vibrate(self):
         if self.shake_speed <= 0:
+            self.shakeground_Sound = mixer.Sound('BGM and Sound Effects/shakeground.wav')
+            self.shakeground_Sound.play()
             if self.rect.x == self.origin_pos.x + 5:
                 self.rect.x = self.origin_pos.x - 5
             else:

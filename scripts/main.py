@@ -98,7 +98,9 @@ while True:
             pygame.quit()
             sys.exit()
         if event.type == pygame.KEYDOWN:
+            
             if event.key == pygame.K_ESCAPE and current_state == event_states[2]:
+                mixer.music.unpause() 
                 draw_text("PAUSED", 50, (250, 250))
                 pygame.display.update()
                 paused = not paused
@@ -118,6 +120,7 @@ while True:
                 
         
     if paused:
+        mixer.music.pause() 
         continue
 
     if current_state == event_states[0]:
@@ -151,8 +154,12 @@ while True:
 
         for sprite in objects.sprites():
             if sprite.is_lose == True:
+                lost_sound = mixer.Sound('BGM and Sound Effects/lost.wav')
+                lost_sound.play()            
                 current_state = event_states[3]
         if wall_clock.is_win == True:
+            win_sound = mixer.Sound('BGM and Sound Effects/win.mp3')
+            win_sound.play()
             current_state = event_states[4]
             
 

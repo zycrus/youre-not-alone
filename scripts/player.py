@@ -1,4 +1,5 @@
 import pygame
+from pygame import mixer
 from support import import_folder
 
 #Player and movement
@@ -105,6 +106,12 @@ class Player(pygame.sprite.Sprite):
             self.is_busy = True
         else:
             self.is_busy = False
+
+    def play_sound(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                self.flash_sound = mixer.Sound('BGM and Sound Effects/flash.mp3')
+                self.flash_sound.play()
     
     def update(self, screen):
         self.get_input()
